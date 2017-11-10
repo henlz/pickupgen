@@ -40,7 +40,7 @@ export default class App extends React.Component {
       <View style={styles.container}>
         <Text>{this.state.pickupLine}</Text>
         <View style={styles.buttonContainer}>
-          <Button title='Get Pickup Line' onPress={this.onButtonTouch} disabled={this.state.isLoading}/>
+          <Button title='Get Cantada' onPress={this.onButtonTouch} disabled={this.state.isLoading}/>
         </View>
         <View style={styles.loaderContainer}>
           {this.state.isLoading && <Spinner/>}
