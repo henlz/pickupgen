@@ -6,31 +6,45 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
 
+    this.apiUrl = 'https://pickupgen-backend.herokuapp.com/pickupLine';
+
     this.state = {
       pickupLine: '',
       isLoading: false,
     };
 
     this.fetchPickupLine = this.fetchPickupLine.bind(this);
+    this.onButtonTouch = this.onButtonTouch.bind(this);
   }
 
   fetchPickupLine() {
     this.setState({isLoading: true});
-    fetch('https://jsonplaceholder.typicode.com/posts/' + (Math.floor(Math.random() * 99) + 1))
-      .then(response => response.json())
-      .then(responseJson => {
-        this.setState({pickupLine: responseJson.title});
+
+    fetch(this.apiUrl)
+      .then(httpResponse => {
+        return httpResponse.json();
+      })
+      .then(pickupLine => {
+        this.setState({pickupLine});
         this.setState({isLoading: false});
       })
       .catch(error => this.setState({isLoading: false}));
+  }
+
+  onButtonTouch() {
+    this.fetchPickupLine();
   }
 
   render() {
     return (
       <View style={styles.container}>
         <Text>{this.state.pickupLine}</Text>
-        <Button title='Get Pickup Line' onPress={() => this.fetchPickupLine()} disabled={this.state.isLoading}/>
-        {this.state.isLoading && <Spinner/>}
+        <View style={styles.buttonContainer}>
+          <Button title='Get Pickup Line' onPress={this.onButtonTouch} disabled={this.state.isLoading}/>
+        </View>
+        <View style={styles.loaderContainer}>
+          {this.state.isLoading && <Spinner/>}
+        </View>
       </View>
     );
   }
@@ -42,5 +56,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    margin: 20
   },
+  buttonContainer: {
+    marginTop: 10
+  },
+  loaderContainer: {
+    position: 'absolute',
+    bottom: '30%'
+  }
 });
